@@ -5,7 +5,7 @@ Aplicación web para ayudar a encontrar mascotas perdidas.
 ## URLs
 
 - **Webapp**: [URL de la aplicación en producción]
-- **API Documentation**: [URL de la colección de Postman]
+
 
 ## Características
 
