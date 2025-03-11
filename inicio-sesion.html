@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión</title>
+    <link rel="stylesheet" href="inicio-sesion.css">
+</head>
+<body>
+    <div class="header">
+        <img src="logo-pet-Photoroom.png" alt="" class="logo">
+        <div class="menu">
+          <button class="barra-menu" onclick="toggleMenu()"></button>
+          <button class="barra-menu" onclick="toggleMenu()"></button>
+          <button class="barra-menu" onclick="toggleMenu()"></button>
+        </div>
+    </div>
+
+    <!-- Menú desplegable -->
+    <div class="menu-desplegable" id="menuDesplegable">
+        <div class="menu-content">
+            <a href="inicio-sesion.html" class="menu-item">Iniciar Sesión</a>
+            <a href="registrarse.html" class="menu-item">Registrarse</a>
+        </div>
+    </div>
+
+    <div class="titulos">
+        <h1 class="titulo">Iniciar Sesión</h1>
+        <h2 class="sub-titulo">Ingresá los siguientes datos para iniciar sesión</h2>
+    </div>
+
+    <div class="principal">
+        <h2 class="email">EMAIL</h2>
+        <input type="email" class="input-email" id="email">
+        <h2 class="password">CONTRASEÑA</h2>
+        <input type="password" class="input-password" id="password">
+        <h3 class="olvide" onclick="window.location.href='cambiar-contraseña.html'">Olvidé mi contraseña</h3>
+        <button class="button-access" onclick="iniciarSesion()">Acceder</button>
+        <p id="mensaje-error" style="color: red; text-align: center; display: none;"></p>
+    </div>
+
+    <script>
+        // Función para mostrar/ocultar el menú
+        function toggleMenu() {
+            const menu = document.getElementById('menuDesplegable');
+            menu.classList.toggle('show');
+        }
+
+        // Cerrar el menú si se hace clic fuera de él
+        window.onclick = function(event) {
+            if (!event.target.matches('.barra-menu')) {
+                const menu = document.getElementById('menuDesplegable');
+                if (menu.classList.contains('show')) {
+                    menu.classList.remove('show');
+                }
+            }
+        }
+
+        async function iniciarSesion() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const mensajeError = document.getElementById('mensaje-error');
+            
+            if (!email || !password) {
+                mostrarError('Por favor, ingrese su email y contraseña');
+                return;
+            }
+
+            try {
+                const response = await fetch('http://localhost:3000/iniciar-sesion', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        contraseña: password
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Guardar información del usuario en localStorage
+                    localStorage.setItem('userEmail', email);
+                    // Redirigir a la página principal
+                    window.location.href = 'home.html';
+                } else {
+                    mostrarError(data.message || 'Error al iniciar sesión');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                mostrarError('Error de conexión con el servidor');
+            }
+        }
+
+        function mostrarError(mensaje) {
+            const mensajeError = document.getElementById('mensaje-error');
+            mensajeError.textContent = mensaje;
+            mensajeError.style.display = 'block';
+            setTimeout(() => {
+                mensajeError.style.display = 'none';
+            }, 3000);
+        }
+
+        // Permitir enviar el formulario con Enter
+        document.querySelector('.input-password').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                iniciarSesion();
+            }
+        });
+    </script>
+</body>
+</html>

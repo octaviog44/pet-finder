@@ -1,0 +1,176 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+  
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+}
+
+/* Header */
+.header {
+    width: 100%;
+    height: 87.58px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: black;
+    padding: 0 20px;
+}
+  
+.logo {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+}
+
+.menu {
+    width: 45px;
+    height: 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+  
+.barra-menu {
+    width: 45px;
+    height: 3px;
+    background-color: white;
+    border: none;
+    margin: 0;
+    padding: 0;
+}
+
+/* Títulos */
+.titulos {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 15px;
+    margin-bottom: 30px;
+}
+
+/* Contenedor Principal */
+.principal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: white;
+    width: 350px;
+    margin: 20px auto;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+/* Inputs */
+.email, .password {
+    padding-top: 0;
+    font-size: 105%;
+    margin: 0;
+}
+
+.email {
+    margin-bottom: 10px;
+}
+
+.password {
+    margin-bottom: 10px;
+    margin-top: 35px;
+}
+
+.input-label {
+    margin-bottom: 8px;
+    display: block;
+}
+
+.input-group {
+    margin-bottom: 35px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.input-password,
+.input-email {
+    width: 290px;
+    height: 56px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    padding: 0 10px;
+}
+
+.button-access {
+    margin-top: 26px;
+    width: 290px;
+    height: 36.5px;
+    background-color: #5A8FEC;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.button-access:hover {
+    background-color: #4a7fd9;
+}
+
+/* Media queries */
+@media (min-width: 768px) {
+    .principal {
+        width: 400px;
+        margin: 30px auto;
+    }
+}
+
+@media (min-width: 1024px) {
+    .principal {
+        width: 450px;
+        margin: 40px auto;
+    }
+}
+
+@media (min-width: 1440px) {
+    .principal {
+        width: 500px;
+        margin: 50px auto;
+    }
+}
+
+/* Menú desplegable */
+.menu-desplegable {
+    display: none;
+    position: fixed;
+    top: 60px;
+    right: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    z-index: 1000;
+}
+
+.menu-desplegable.show {
+    display: block;
+}
+
+.menu-content {
+    display: flex;
+    flex-direction: column;
+    padding: 10px 0;
+}
+
+.menu-item {
+    padding: 12px 24px;
+    color: #333;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.menu-item:hover {
+    background-color: #f5f5f5;
+}

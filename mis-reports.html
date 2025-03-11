@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis reportes</title>
+    <link rel="stylesheet" href="mis-reports.css">
+</head>
+<body>
+    <div class="header">
+        <img src="logo-pet-Photoroom.png" alt="" class="logo">
+        <div class="menu">
+          <button class="barra-menu" onclick="toggleMenu()"></button>
+          <button class="barra-menu" onclick="toggleMenu()"></button>
+          <button class="barra-menu" onclick="toggleMenu()"></button>
+        </div>
+    </div>
+
+    <!-- Menú desplegable -->
+    <div class="menu-desplegable" id="menuDesplegable">
+        <div class="menu-content">
+            <a href="home.html" class="menu-item">Inicio</a>
+            <a href="profile.html" class="menu-item">Mi Perfil</a>
+            <a href="#" class="menu-item" onclick="cerrarSesion()">Cerrar Sesión</a>
+        </div>
+    </div>
+
+    <div class="titulos">
+        <h1 class="titulo">Mis reportes</h1>
+    </div>
+
+    <div class="contenedor-mascotas" id="contenedorMascotas">
+        <!-- Las mascotas se cargarán aquí dinámicamente -->
+    </div>
+
+    <div class="boton-reportar">
+        <button class="button-reportar" onclick="window.location.href='reportar-mascota.html'">Reportar mascota</button>
+    </div>
+
+    <script>
+        // Verificar si el usuario está logueado y cargar mascotas
+        window.onload = function() {
+            const userEmail = localStorage.getItem('userEmail');
+            if (!userEmail) {
+                window.location.href = 'inicio-sesion.html';
+            } else {
+                cargarMisReportes();
+            }
+        }
+
+        // Función para cargar las mascotas reportadas por el usuario
+        function cargarMisReportes() {
+            const contenedor = document.getElementById('contenedorMascotas');
+            const userEmail = localStorage.getItem('userEmail');
+            const mascotas = JSON.parse(localStorage.getItem('mascotas') || '[]');
+            
+            // Filtrar mascotas del usuario actual
+            const misMascotas = mascotas.filter(mascota => mascota.reportadoPor === userEmail);
+
+            if (misMascotas.length === 0) {
+                contenedor.innerHTML = '<p class="no-mascotas">No has reportado ninguna mascota aún.</p>';
+                return;
+            }
+
+            // Ordenar mascotas por fecha, las más recientes primero
+            misMascotas.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+
+            contenedor.innerHTML = misMascotas.map(mascota => `
+                <div class="mascota-card">
+                    <img src="${mascota.imagen}" alt="Foto de ${mascota.nombre}" class="foto-mascota">
+                    <div class="info-mascota">
+                        <h3 class="nombre-mascota">${mascota.nombre}</h3>
+                        <p class="ubicacion">${mascota.ubicacion}</p>
+                        <p class="fecha">Reportado: ${formatearFecha(mascota.fecha)}</p>
+                        <p class="estado">Estado: ${mascota.estado === 'perdida' ? 'Perdida' : 'Encontrada'}</p>
+                        <div class="botones-card">
+                            <button onclick="editarMascota(${mascota.id})" class="boton-editar">Editar</button>
+                            <button onclick="cambiarEstado(${mascota.id})" class="boton-estado">
+                                ${mascota.estado === 'perdida' ? 'Marcar como encontrada' : 'Marcar como perdida'}
+                            </button>
+                            <button onclick="eliminarReporte(${mascota.id})" class="boton-eliminar">Eliminar</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Función para formatear la fecha
+        function formatearFecha(fecha) {
+            const f = new Date(fecha);
+            return f.toLocaleDateString('es-ES', { 
+                day: '2-digit', 
+                month: '2-digit', 
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        // Función para editar una mascota
+        function editarMascota(id) {
+            window.location.href = `editar-reports.html?id=${id}`;
+        }
+
+        // Función para cambiar el estado de una mascota
+        function cambiarEstado(id) {
+            const mascotas = JSON.parse(localStorage.getItem('mascotas') || '[]');
+            const mascotaIndex = mascotas.findIndex(m => m.id === id);
+            
+            if (mascotaIndex !== -1) {
+                mascotas[mascotaIndex].estado = mascotas[mascotaIndex].estado === 'perdida' ? 'encontrada' : 'perdida';
+                localStorage.setItem('mascotas', JSON.stringify(mascotas));
+                cargarMisReportes();
+            }
+        }
+
+        // Función para eliminar un reporte
+        function eliminarReporte(id) {
+            if (confirm('¿Estás seguro de que deseas eliminar este reporte?')) {
+                const mascotas = JSON.parse(localStorage.getItem('mascotas') || '[]');
+                const mascotasFiltradas = mascotas.filter(m => m.id !== id);
+                localStorage.setItem('mascotas', JSON.stringify(mascotasFiltradas));
+                cargarMisReportes();
+            }
+        }
+
+        // Función para mostrar/ocultar el menú
+        function toggleMenu() {
+            const menu = document.getElementById('menuDesplegable');
+            menu.classList.toggle('show');
+        }
+
+        // Función para cerrar sesión
+        function cerrarSesion() {
+            localStorage.removeItem('userEmail');
+            window.location.href = 'index.html';
+        }
+
+        // Cerrar el menú si se hace clic fuera de él
+        window.onclick = function(event) {
+            if (!event.target.matches('.barra-menu')) {
+                const menu = document.getElementById('menuDesplegable');
+                if (menu.classList.contains('show')) {
+                    menu.classList.remove('show');
+                }
+            }
+        }
+    </script>
+</body>
+</html>

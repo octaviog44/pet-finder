@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrarse</title>
+    <link rel="stylesheet" href="registrarse.css">
+</head>
+<body>
+    <div class="header">
+        <img src="logo-pet-Photoroom.png" alt="" class="logo">
+        <div class="menu">
+          <button class="barra-menu" onclick="toggleMenu()"></button>
+          <button class="barra-menu" onclick="toggleMenu()"></button>
+          <button class="barra-menu" onclick="toggleMenu()"></button>
+        </div>
+    </div>
+
+    <!-- Menú desplegable -->
+    <div class="menu-desplegable" id="menuDesplegable">
+        <div class="menu-content">
+            <a href="inicio-sesion.html" class="menu-item">Iniciar Sesión</a>
+            <a href="registrarse.html" class="menu-item">Registrarse</a>
+        </div>
+    </div>
+
+    <div class="titulos">
+        <h1 class="titulo">Registrarse</h1>
+        <h2 class="sub-titulo">Ingresá los siguientes datos para registrarte</h2>
+    </div>
+
+    <div class="principal">
+        <h2 class="email">EMAIL</h2>
+        <input type="email" class="input-email" id="email">
+        <h2 class="password">CONTRASEÑA</h2>
+        <input type="password" class="input-password" id="password">
+        <h2 class="confirm-password">CONFIRMAR CONTRASEÑA</h2>
+        <input type="password" class="input-confirm-password" id="confirmPassword">
+        <button class="button-access" onclick="registrarse()">Registrarse</button>
+        <p id="mensaje-error" style="color: red; text-align: center; display: none;"></p>
+    </div>
+
+    <script>
+        // Función para mostrar/ocultar el menú
+        function toggleMenu() {
+            const menu = document.getElementById('menuDesplegable');
+            menu.classList.toggle('show');
+        }
+
+        // Cerrar el menú si se hace clic fuera de él
+        window.onclick = function(event) {
+            if (!event.target.matches('.barra-menu')) {
+                const menu = document.getElementById('menuDesplegable');
+                if (menu.classList.contains('show')) {
+                    menu.classList.remove('show');
+                }
+            }
+        }
+
+        async function registrarse() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            if (!email || !password || !confirmPassword) {
+                mostrarError('Por favor, complete todos los campos');
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                mostrarError('Las contraseñas no coinciden');
+                return;
+            }
+
+            try {
+                const response = await fetch('http://localhost:3000/registrarse', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        contraseña: password,
+                        confirmarContraseña: confirmPassword
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Redirigir a la página de inicio de sesión
+                    window.location.href = 'inicio-sesion.html';
+                } else {
+                    mostrarError(data.message || 'Error al registrarse');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                mostrarError('Error de conexión con el servidor');
+            }
+        }
+
+        function mostrarError(mensaje) {
+            const mensajeError = document.getElementById('mensaje-error');
+            mensajeError.textContent = mensaje;
+            mensajeError.style.display = 'block';
+            setTimeout(() => {
+                mensajeError.style.display = 'none';
+            }, 3000);
+        }
+
+        // Permitir enviar el formulario con Enter
+        document.querySelector('.input-confirm-password').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                registrarse();
+            }
+        });
+    </script>
+</body>
+</html>

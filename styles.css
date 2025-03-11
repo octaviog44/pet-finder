@@ -1,0 +1,210 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  min-height: 100vh;
+}
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+/*  header */
+.header {
+  width: 100%;
+  height: 87.58px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: black;
+  padding: 0 20px;
+}
+
+.logo {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+}
+
+.menu {
+  width: 45px;
+  height: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.barra-menu {
+  width: 45px;
+  height: 3px;
+  background-color: white;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+}
+
+/*   Home  */
+
+.principal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding-top: 1%;
+}
+
+.imagen-home {
+  width: 20%;
+  height: auto;
+  margin-bottom: 1%;
+}
+
+.titulo {
+  font-size: 2vw;
+  margin-bottom: 0.5%;
+  color: #333;
+}
+
+.sub-titulo-home {
+  font-size: 1.5vw;
+  color: #666;
+  text-align: center;
+  max-width: 60%;
+  margin-bottom: 2%;
+}
+
+.button-blue {
+  width: 60%;
+  height: 40px;
+  background-color: #5A8FEC;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  margin-bottom: 1.5%;
+  cursor: pointer;
+}
+
+.button-green {
+  width: 60%;
+  height: 40px;
+  background-color: #00A884;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+/* Menú desplegable */
+.menu-desplegable {
+  display: none;
+  position: fixed;
+  top: 6vh;
+  right: 5%;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  z-index: 1000;
+  width: 25%;
+  max-width: 250px;
+}
+
+.menu-desplegable.show {
+  display: block;
+}
+
+.menu-content {
+  display: flex;
+  flex-direction: column;
+  padding: 4% 0;
+}
+
+.menu-item {
+  padding: 3% 6%;
+  color: #333;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+  font-size: 2vw;
+}
+
+.menu-item:hover {
+  background-color: #f5f5f5;
+}
+
+/* Formulario 
+form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+input, button {
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+/* Lista de mascotas 
+.pet-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.pet-card {
+  background: white;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.pet-card img {
+  width: 100%;
+  height: auto;
+  max-height: 200px;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 15px;
+  }
+
+  form {
+    flex-direction: column;
+  }
+
+  input, button {
+    width: 100%;
+  }
+}
+*/

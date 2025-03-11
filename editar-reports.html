@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subir Imagen</title>
+    <link rel="stylesheet" href="editar-reports.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        #mi_mapa {
+            height: 400px;
+            width: 80%;
+            margin: auto;
+            border: 2px solid black;
+            border-radius: 10px;
+        }
+        #search-box {
+            margin: 10px 0;
+        }
+        input {
+            padding: 8px;
+            width: 250px;
+            font-size: 16px;
+        }
+        .buscar-boton {
+            padding: 8px 15px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 5%;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src="logo-pet-Photoroom.png" alt="" class="logo">
+        <div class="menu">
+          <button class="barra-menu"></button>
+          <button class="barra-menu"></button>
+          <button class="barra-menu"></button>
+        </div>
+      </div>
+   <div class="titulos">
+    <h1 class="titulo">Editar reporte</h1>
+    <h1 class="titulo">de mascota</h1>
+   </div>
+   
+   <div class="nombre">
+    <h3 class="titulo-nombre">NOMBRE</h3>
+    <input type="text" class="input-nombre">
+   </div>
+
+   <div class="foto-mascota">
+       <label for="imageInput" class="custom-file-button">Modificar foto</label>
+       <input type="file" id="imageInput" accept="image/*" hidden>
+       <button onclick="showImage()" class="boton-vista">Ver vista previa</button>
+       <div id="image-container"></div>
+       <script src="script.js"></script>
+   </div>   
+   
+
+   <h2>Mapa de Mascota Vista</h2>
+
+    <div id="search-box">
+        <input type="text" id="locationInput" placeholder="Escribe una ciudad, pueblo o lugar">
+        <button onclick="searchLocation()" class="buscar-boton">Buscar</button>
+    </div>
+
+    <div id="mi_mapa"></div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // Inicializar el mapa centrado en una ubicación general
+        let map = L.map('mi_mapa').setView([-32.95625, -60.63099], 12);
+
+        // Agregar la capa de OpenStreetMap
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Variable para el marcador (inicialmente vacío)
+        let marker;
+
+        // Función para buscar la ubicación y agregar un marcador
+        function searchLocation() {
+            const location = document.getElementById("locationInput").value;
+
+            if (location.trim() === "") {
+                alert("Por favor, ingresa una ubicación.");
+                return;
+            }
+
+            // Llamada a la API de OpenStreetMap (Nominatim) para obtener coordenadas
+            fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${location}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.length === 0) {
+                        alert("Ubicación no encontrada.");
+                        return;
+                    }
+
+                    // Obtener latitud y longitud
+                    const lat = data[0].lat;
+                    const lon = data[0].lon;
+
+                    // Mover el mapa a la nueva ubicación
+                    map.setView([lat, lon], 12);
+
+                    // Si ya hay un marcador, eliminarlo
+                    if (marker) {
+                        map.removeLayer(marker);
+                    }
+
+                    // Agregar nuevo marcador con mensaje "Mascota Vista"
+                    marker = L.marker([lat, lon]).addTo(map)
+                        .bindPopup("<b>🐾 Mascota Vista 🐾</b>").openPopup();
+                })
+                .catch(error => console.error("Error al buscar ubicación:", error));
+        }
+    </script>
+    <script src="script.js"></script>
+    <h3 class="texto">Buscá un punto de referencia para reportar la mascota. Por ejemplo, la ubicación donde lo viste por última vez.</h3>
+    <div class="botones">
+        <button class="boton-guardar" onclick="window.location.href='mis-reports.html'">Guardar</button>
+        <button class="boton-reportar" onclick="window.location.href='mis-reports.html'">Reportar como encontrada</button>
+        <button class="boton-cancelar" onclick="window.location.href='mis-reports.html'">Eliminar reporte</button>
+    </div>
+   
+</body>
+</html>

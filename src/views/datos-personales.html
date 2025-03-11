@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Datos personales</title>
+    <link rel="stylesheet" href="datos-personales.css">
+</head>
+<body>
+    <div class="header">
+        <img src="logo-pet-Photoroom.png" alt="" class="logo">
+        <div class="menu">
+          <button class="barra-menu" onclick="toggleMenu()"></button>
+          <button class="barra-menu" onclick="toggleMenu()"></button>
+          <button class="barra-menu" onclick="toggleMenu()"></button>
+        </div>
+    </div>
+
+    <!-- Menú desplegable -->
+    <div class="menu-desplegable" id="menuDesplegable">
+        <div class="menu-content">
+            <a href="home.html" class="menu-item">Inicio</a>
+            <a href="profile.html" class="menu-item">Mi Perfil</a>
+            <a href="#" class="menu-item" onclick="cerrarSesion()">Cerrar Sesión</a>
+        </div>
+    </div>
+
+    <div class="titulos">
+        <h1 class="titulo">Datos</h1>
+        <h1 class="titulo">personales</h1>
+    </div>
+
+    <div class="principal">
+        <h2 class="email">NOMBRE</h2>
+        <input type="text" class="input-password">
+        <h2 class="password">LOCALIDAD</h2>
+        <input type="text" class="input-password">
+        <button class="button-access" onclick="window.location.href='profile.html'">Guardar</button>
+    </div>
+
+    <script>
+        // Función para mostrar/ocultar el menú
+        function toggleMenu() {
+            const menu = document.getElementById('menuDesplegable');
+            menu.classList.toggle('show');
+        }
+
+        // Cerrar el menú si se hace clic fuera de él
+        window.onclick = function(event) {
+            if (!event.target.matches('.barra-menu')) {
+                const menu = document.getElementById('menuDesplegable');
+                if (menu.classList.contains('show')) {
+                    menu.classList.remove('show');
+                }
+            }
+        }
+
+        // Función para cerrar sesión
+        function cerrarSesion() {
+            localStorage.removeItem('userEmail');
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>

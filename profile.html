@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Perfil - Pet Finder</title>
+    <link rel="stylesheet" href="profile.css">
+</head>
+<body>
+    <div class="header">
+        <img src="logo-pet-Photoroom.png" alt="Logo" class="logo">
+        <div class="menu">
+            <button class="barra-menu" onclick="toggleMenu()"></button>
+            <button class="barra-menu" onclick="toggleMenu()"></button>
+            <button class="barra-menu" onclick="toggleMenu()"></button>
+        </div>
+    </div>
+
+    <!-- Menú desplegable -->
+    <div class="menu-desplegable" id="menuDesplegable">
+        <div class="menu-content">
+            <a href="home.html" class="menu-item">Inicio</a>
+            <a href="mis-reports.html" class="menu-item">Mis Reportes</a>
+            <a href="#" class="menu-item" onclick="cerrarSesion()">Cerrar Sesión</a>
+        </div>
+    </div>
+
+    <div class="contenedor-principal">
+        <h1 class="titulo">Mi Perfil</h1>
+        <button class="button-access" onclick="window.location.href='datos-personales.html'">
+            Modificar datos personales
+        </button>
+        <button class="button-access" onclick="window.location.href='cambiar-contraseña.html'">
+            Modificar contraseña
+        </button>
+        <h3 class="mail" id="userEmail"></h3>
+        <h3 class="cerrar-sesion" onclick="cerrarSesion()">Cerrar sesión</h3>
+    </div>
+
+    <script>
+        // Mostrar el email del usuario cuando se carga la página
+        window.onload = function() {
+            const userEmail = localStorage.getItem('userEmail');
+            if (userEmail) {
+                document.getElementById('userEmail').textContent = userEmail;
+            } else {
+                // Si no hay email guardado, redirigir al inicio de sesión
+                window.location.href = 'inicio-sesion.html';
+            }
+        }
+
+        // Función para cerrar sesión
+        function cerrarSesion() {
+            localStorage.removeItem('userEmail');
+            window.location.href = 'index.html';
+        }
+
+        // Función para mostrar/ocultar el menú
+        function toggleMenu() {
+            const menu = document.getElementById('menuDesplegable');
+            menu.classList.toggle('show');
+        }
+
+        // Cerrar el menú si se hace clic fuera de él
+        window.onclick = function(event) {
+            if (!event.target.matches('.barra-menu')) {
+                const menu = document.getElementById('menuDesplegable');
+                if (menu.classList.contains('show')) {
+                    menu.classList.remove('show');
+                }
+            }
+        }
+    </script>
+</body>
+</html>

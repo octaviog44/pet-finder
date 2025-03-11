@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reportar Mascota - Pet Finder</title>
+    <link rel="stylesheet" href="reportar-mascota.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+</head>
+<body>
+    <div class="header">
+        <img src="logo-pet-Photoroom.png" alt="" class="logo">
+        <div class="menu">
+            <button class="barra-menu" onclick="toggleMenu()"></button>
+            <button class="barra-menu" onclick="toggleMenu()"></button>
+            <button class="barra-menu" onclick="toggleMenu()"></button>
+        </div>
+    </div>
+
+    <!-- Menú desplegable -->
+    <div class="menu-desplegable" id="menuDesplegable">
+        <div class="menu-content">
+            <a href="home.html" class="menu-item">Inicio</a>
+            <a href="mis-reports.html" class="menu-item">Mis Reportes</a>
+            <a href="#" class="menu-item" onclick="cerrarSesion()">Cerrar Sesión</a>
+        </div>
+    </div>
+
+    <div class="contenedor-principal">
+        <div class="titulos">
+            <h1 class="titulo">Reportar mascota</h1>
+            <h3 class="sub-titulo">Ingresá la siguiente información para realizar el reporte de la mascota</h3>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Nombre de la mascota</label>
+            <input type="text" class="form-input" placeholder="Ingresa el nombre de la mascota">
+        </div>
+
+        <div class="foto-mascota">
+            <h2>Sube una foto de la mascota</h2>
+            <label for="imageInput" class="custom-file-button">Seleccionar archivo</label>
+            <input type="file" id="imageInput" accept="image/*" hidden>
+            <div id="image-container"></div>
+        </div>
+
+        <div class="form-group">
+            <h2>Ubicación donde fue vista</h2>
+            <div id="search-box">
+                <input type="text" id="locationInput" placeholder="Buscar ciudad, barrio o lugar">
+                <button onclick="searchLocation()" class="buscar-boton">Buscar ubicación</button>
+            </div>
+            <div id="mi_mapa"></div>
+            <p class="texto">Buscá un punto de referencia para reportar la mascota. Por ejemplo, la ubicación donde la viste por última vez.</p>
+        </div>
+
+        <div class="botones">
+            <button class="boton-reportar" onclick="guardarMascota()">Reportar mascota</button>
+            <button class="boton-cancelar" onclick="window.location.href='mis-reports.html'">Cancelar</button>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // Inicializar el mapa
+        let map = L.map('mi_mapa').setView([-32.95625, -60.63099], 12);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        let marker;
+
+        function searchLocation() {
+            const location = document.getElementById("locationInput").value;
+
+            if (location.trim() === "") {
+                alert("Por favor, ingresa una ubicación.");
+                return;
+            }
+
+            fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${location}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.length === 0) {
+                        alert("Ubicación no encontrada.");
+                        return;
+                    }
+
+                    const lat = data[0].lat;
+                    const lon = data[0].lon;
+
+                    map.setView([lat, lon], 14);
+
+                    if (marker) {
+                        map.removeLayer(marker);
+                    }
+
+                    marker = L.marker([lat, lon]).addTo(map)
+                        .bindPopup("<b>🐾 Mascota Vista 🐾</b>").openPopup();
+                })
+                .catch(error => {
+                    console.error("Error al buscar ubicación:", error);
+                    alert("Error al buscar la ubicación. Por favor, intenta de nuevo.");
+                });
+        }
+
+        // Función para mostrar la imagen seleccionada
+        document.getElementById('imageInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const container = document.getElementById('image-container');
+                    container.innerHTML = `<img src="${e.target.result}" class="imagen-subida" alt="Foto de la mascota">`;
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Función para guardar la mascota
+        function guardarMascota() {
+            const nombre = document.querySelector('.form-input').value;
+            const ubicacion = document.getElementById('locationInput').value;
+            const imagen = document.getElementById('image-container').querySelector('img')?.src || '';
+            const userEmail = localStorage.getItem('userEmail');
+
+            if (!userEmail) {
+                alert('Debe iniciar sesión para reportar una mascota');
+                window.location.href = 'inicio-sesion.html';
+                return;
+            }
+
+            if (!nombre || !ubicacion || !imagen) {
+                alert('Por favor, complete todos los campos y suba una imagen');
+                return;
+            }
+
+            let mascotas = JSON.parse(localStorage.getItem('mascotas') || '[]');
+            
+            const nuevaMascota = {
+                id: Date.now(),
+                nombre: nombre,
+                ubicacion: ubicacion,
+                imagen: imagen,
+                fecha: new Date().toISOString(),
+                estado: 'perdida',
+                reportadoPor: userEmail
+            };
+
+            mascotas.push(nuevaMascota);
+            localStorage.setItem('mascotas', JSON.stringify(mascotas));
+            window.location.href = 'mis-reports.html';
+        }
+
+        // Función para mostrar/ocultar el menú
+        function toggleMenu() {
+            const menu = document.getElementById('menuDesplegable');
+            menu.classList.toggle('show');
+        }
+
+        // Cerrar el menú si se hace clic fuera de él
+        window.onclick = function(event) {
+            if (!event.target.matches('.barra-menu')) {
+                const menu = document.getElementById('menuDesplegable');
+                if (menu.classList.contains('show')) {
+                    menu.classList.remove('show');
+                }
+            }
+        }
+
+        // Función para cerrar sesión
+        function cerrarSesion() {
+            localStorage.removeItem('userEmail');
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>
