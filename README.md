@@ -28,8 +28,8 @@ Aplicación web para ayudar a encontrar mascotas perdidas.
 
 ### Autenticación
 
-- `POST /api/auth/register` - Registro de usuario
-- `POST /api/auth/login` - Inicio de sesión
+- Registro de usuario: POST /registrarse
+- Inicio de sesión: POST /iniciar-sesion
 
 ### Mascotas
 
