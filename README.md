@@ -1,4 +1,4 @@
-  # PetFinder App
+# PetFinder App
 
 Aplicación web para ayudar a encontrar mascotas perdidas.
 
